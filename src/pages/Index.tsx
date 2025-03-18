@@ -16,9 +16,6 @@ const Index = () => {
 
       <main className="flex-1 container max-w-6xl py-8 px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col items-center justify-center mb-12 text-center">
-          <div className="inline-flex items-center justify-center h-12 px-6 mb-4 text-sm text-primary-foreground bg-primary rounded-full glass-panel animate-slide-up">
-            <span className="font-medium">Streamline Your DSL Creation</span>
-          </div>
           <h1 className="text-4xl sm:text-5xl font-bold tracking-tight mb-4 animate-slide-up" style={{ animationDelay: "0.1s" }}>
             Vendor DSL UI Generator
           </h1>
