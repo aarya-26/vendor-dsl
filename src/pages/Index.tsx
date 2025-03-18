@@ -20,8 +20,7 @@ const Index = () => {
             Vendor DSL UI Generator
           </h1>
           <p className="text-xl text-muted-foreground max-w-2xl animate-slide-up" style={{ animationDelay: "0.2s" }}>
-            Create standardized DSL configurations in minutes, not hours. 
-            Simplify your workflow with our intuitive interface.
+            Create standardized DSL configurations in minutes, not hours.
           </p>
         </div>
 
