@@ -1,11 +1,11 @@
 
-import React, { useState } from "react";
+import React from "react";
 import { X, Plus } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
-interface KeyValuePair {
+export interface KeyValuePair {
   key: string;
   value: string;
   id: string;
@@ -16,6 +16,7 @@ interface KeyValueInputProps {
   onChange: (items: KeyValuePair[]) => void;
   keyPlaceholder?: string;
   valuePlaceholder?: string;
+  addButtonText?: string;
   className?: string;
 }
 
@@ -24,6 +25,7 @@ const KeyValueInput: React.FC<KeyValueInputProps> = ({
   onChange,
   keyPlaceholder = "Key",
   valuePlaceholder = "Value",
+  addButtonText,
   className,
 }) => {
   const generateId = () => `kv-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
@@ -46,7 +48,7 @@ const KeyValueInput: React.FC<KeyValueInputProps> = ({
 
   return (
     <div className={cn("space-y-2", className)}>
-      {items.map((item, index) => (
+      {items.map((item) => (
         <div 
           key={item.id} 
           className="flex items-center gap-2 animate-fade-in stagger-item"
@@ -83,7 +85,7 @@ const KeyValueInput: React.FC<KeyValueInputProps> = ({
         className="mt-2 w-full flex items-center justify-center gap-1 text-muted-foreground hover:text-foreground transition-colors"
       >
         <Plus className="h-3.5 w-3.5" />
-        <span>Add {keyPlaceholder}</span>
+        <span>{addButtonText || `Add ${keyPlaceholder}`}</span>
       </Button>
     </div>
   );

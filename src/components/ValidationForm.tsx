@@ -44,8 +44,8 @@ const ValidationForm: React.FC<ValidationFormProps> = ({ className }) => {
   ]);
   
   const [additionalValidations, setAdditionalValidations] = useState(false);
-  const [readWriteFields, setReadWriteFields] = useState<{ key: string; value: string }[]>([
-    { key: "search_term", value: "${request.data.id_number}" }
+  const [readWriteFields, setReadWriteFields] = useState<{ key: string; value: string; id: string }[]>([
+    { key: "search_term", value: "${request.data.id_number}", id: "rw-1" }
   ]);
   const [configJson, setConfigJson] = useState<string>("");
 
