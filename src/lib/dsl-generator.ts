@@ -18,6 +18,10 @@ export interface VendorDSL {
 export interface ConfigDSL {
   validations: Validation[];
   additional_validations: boolean;
+  read_write?: {
+    search_term: string;
+    [key: string]: any;
+  };
 }
 
 export interface Precondition {
@@ -45,7 +49,7 @@ export interface Validation {
 export interface Condition {
   key: string;
   type: string;
-  value: string;
+  value: string | number | boolean | any[];
 }
 
 export interface ValidationCondition extends Condition {
@@ -146,6 +150,11 @@ export const generateConfigDSL = (formData: any): ConfigDSL => {
   // Map additional validations flag
   config.additional_validations = formData.additional_validations || false;
   
+  // Map read_write if present
+  if (formData.read_write) {
+    config.read_write = formData.read_write;
+  }
+  
   return config;
 };
 
@@ -162,5 +171,13 @@ export const validateCondition = (condition: Condition): boolean => {
 // Available options for select fields
 export const HTTP_METHODS = ["GET", "POST", "PUT", "DELETE", "PATCH"];
 export const RETRY_CASES = ["http_poison_error", "network_error", "timeout", "server_error"];
-export const CONDITION_TYPES = ["equals", "matches", "greater_than", "less_than", "contains"];
+export const CONDITION_TYPES = [
+  "equals", 
+  "matches", 
+  "greater_than", 
+  "less_than", 
+  "contains", 
+  "str_len_range", 
+  "data_type"
+];
 export const CONDITION_OPERATORS = ["AND", "OR"];

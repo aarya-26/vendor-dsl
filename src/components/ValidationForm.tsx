@@ -3,11 +3,15 @@ import React, { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 import ConditionBuilder, { ConditionGroup } from "./ConditionBuilder";
 import { ConfigDSL, generateConfigDSL, formatDSL } from "@/lib/dsl-generator";
 import JsonPreview from "./JsonPreview";
 import { cn } from "@/lib/utils";
+import KeyValueInput from "./KeyValueInput";
+import { toast } from "@/components/ui/use-toast";
 
 interface ValidationFormProps {
   className?: string;
@@ -40,6 +44,9 @@ const ValidationForm: React.FC<ValidationFormProps> = ({ className }) => {
   ]);
   
   const [additionalValidations, setAdditionalValidations] = useState(false);
+  const [readWriteFields, setReadWriteFields] = useState<{ key: string; value: string }[]>([
+    { key: "search_term", value: "${request.data.id_number}" }
+  ]);
   const [configJson, setConfigJson] = useState<string>("");
 
   const handleGroupsChange = (groups: ConditionGroup[]) => {
@@ -69,6 +76,23 @@ const ValidationForm: React.FC<ValidationFormProps> = ({ className }) => {
   };
 
   const generateConfig = () => {
+    if (!validationGroups.length) {
+      toast({
+        title: "Validation required",
+        description: "Please add at least one validation rule.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Convert read_write fields to an object
+    const readWrite = readWriteFields.reduce((acc: Record<string, string>, field) => {
+      if (field.key) {
+        acc[field.key] = field.value || "";
+      }
+      return acc;
+    }, {});
+
     const formData = {
       validations: validationGroups.map((group) => ({
         operator: group.operator,
@@ -83,6 +107,7 @@ const ValidationForm: React.FC<ValidationFormProps> = ({ className }) => {
         error_message: group.error_message,
       })),
       additional_validations: additionalValidations,
+      read_write: Object.keys(readWrite).length > 0 ? readWrite : undefined,
     };
 
     const configDSL = generateConfigDSL(formData);
@@ -155,27 +180,55 @@ const ValidationForm: React.FC<ValidationFormProps> = ({ className }) => {
                   includeValidationFields={true}
                 />
               </div>
+              
+              {index < validationGroups.length - 1 && (
+                <Separator className="my-6" />
+              )}
             </div>
           ))}
 
-          <div className="flex items-center space-x-2">
-            <Checkbox
-              id="additional-validations"
-              checked={additionalValidations}
-              onCheckedChange={(checked) => setAdditionalValidations(!!checked)}
+          <div className="flex flex-col gap-4 pt-4 animate-fade-in">
+            <ConditionBuilder
+              groups={validationGroups}
+              onChange={handleGroupsChange}
+              includeValidationFields={true}
+              className="mt-4"
             />
-            <Label htmlFor="additional-validations">
-              Allow additional validations
-            </Label>
-          </div>
 
-          <ConditionBuilder
-            groups={validationGroups}
-            onChange={handleGroupsChange}
-            includeValidationFields={true}
-            className="mt-4"
-          />
+            <div className="space-y-4 pt-4">
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="additional-validations"
+                  checked={additionalValidations}
+                  onCheckedChange={(checked) => setAdditionalValidations(!!checked)}
+                />
+                <Label htmlFor="additional-validations">
+                  Allow additional validations
+                </Label>
+              </div>
+            </div>
+          </div>
+          
+          <div className="pt-6">
+            <h3 className="text-sm font-medium mb-2">Read/Write Configuration</h3>
+            <KeyValueInput 
+              items={readWriteFields}
+              onChange={setReadWriteFields}
+              keyPlaceholder="Key (e.g., search_term)"
+              valuePlaceholder="Value (e.g., ${request.data.id_number})"
+              addButtonText="Add Read/Write Field"
+            />
+          </div>
         </CardContent>
+        <CardFooter>
+          <Button
+            type="button"
+            className="w-full"
+            onClick={generateConfig}
+          >
+            Generate Config JSON
+          </Button>
+        </CardFooter>
       </Card>
 
       {configJson && (
