@@ -17,7 +17,7 @@ const Index = () => {
       <main className="flex-1 container max-w-6xl py-8 px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col items-center justify-center mb-12 text-center">
           <h1 className="text-4xl sm:text-5xl font-bold tracking-tight mb-4 animate-slide-up" style={{ animationDelay: "0.1s" }}>
-            Vendor DSL UI Generator
+            Vendor DSL Generator
           </h1>
           <p className="text-xl text-muted-foreground max-w-2xl animate-slide-up" style={{ animationDelay: "0.2s" }}>
             Create standardized DSL configurations in minutes, not hours.
@@ -55,7 +55,7 @@ const Index = () => {
 
         <footer className="mt-16 text-center text-sm text-muted-foreground">
           <p>
-            Vendor DSL UI Generator &copy; {new Date().getFullYear()}
+            Vendor DSL Generator &copy; {new Date().getFullYear()}
           </p>
         </footer>
       </main>
